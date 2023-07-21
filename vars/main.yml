@@ -1,2 +1,6 @@
 ---
 # vars file for ansible-role-vault
+vault_required_pip_packages:
+
+vault_required_system_packages:
+  - gpg

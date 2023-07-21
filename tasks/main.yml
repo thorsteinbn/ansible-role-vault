@@ -1,2 +1,17 @@
 ---
 # tasks file for ansible-role-vault
+- name: Install system requirements
+  ansible.builtin.apt:
+    name: '{{ vault_required_system_packages }}'
+
+- name: Add Hashicorp gpg key
+  ansible.builtin.apt_key:
+    url: https://apt.releases.hashicorp.com/gpg
+    id: 798AEC654E5C15428C8E42EEAA16FCBCA621E701
+    state: present
+    keyring: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+- name: Add Hashicorp package repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    filename: "hashicorp"
