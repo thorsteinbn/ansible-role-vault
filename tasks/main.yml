@@ -15,3 +15,26 @@
   ansible.builtin.apt_repository:
     repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
     filename: "hashicorp"
+
+- name: Install vault
+  ansible.builtin.apt:
+    name: '{{ vault_package }}'
+
+- name: Insert vault license file
+  ansible.builtin.copy:
+    src: '{{ vault_license_file_source }}'
+    dest: '{{ vault_enterprise_license_location }}'
+    owner: '{{ vault_user }}'
+    group: '{{ vault_group }}'
+    mode: '0640'
+  when:
+    - vault_license_file_source | d(False)
+    - vault_enterprise_license_location | d(False)
+
+- name: Insert vault config template
+  ansible.builtin.template:
+    src: 'vault.hcl.j2'
+    dest: '/etc/vault.d/vault.hcl'
+    owner: '{{ vault_user }}'
+    group: '{{ vault_group }}'
+    mode: '0640'
