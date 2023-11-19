@@ -1,5 +1,5 @@
 ---
-# defaults file for ansible-role-vault
+# defaults file for thorsteinbn.vault
 
 vault_package: 'vault-enterprise=1.14.0+ent-1'
 
