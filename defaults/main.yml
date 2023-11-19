@@ -2,15 +2,10 @@
 # defaults file for thorsteinbn.vault
 
 vault_package: 'vault-enterprise=1.14.0+ent-1'
-
-vault_enterprise_license_location: null
-
-vault_license_file_source: null
-
+vault_license_path: "/etc/vault.d/vault.hclic"
+vault_license_file: null
 vault_user: 'vault'
-
 vault_group: 'vault'
-
 vault_ui_enable: true
 
 vault_tcp_listeners:
@@ -18,3 +13,4 @@ vault_tcp_listeners:
     vault_port: 8200
     vault_tls_enable: true
     vault_tls_cert_file: /path/to/cert/file
+    vault_tls_key_file: /path/to/key/file

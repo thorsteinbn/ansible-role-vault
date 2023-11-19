@@ -17,14 +17,17 @@ storage "file" {
 #  path    = "vault"
 #}
 
-{% for t in vault_tcp_listeners %}
+{% for t in vault_tcp_listeners -%}
 listener "tcp" {
   address = "{{ t.vault_address }}:{{ t.vault_port }}"
   {% if (t.vault_tls_enable | bool) -%}
   {% if t.vault_tls_cert_file is defined -%}
   tls_cert_file = "{{ t.vault_tls_cert_file }}"
-  {% endif %}
-  {% endif %}
+  {% endif -%}
+  {% if t.vault_tls_key_file is defined -%}
+  tls_cert_file = "{{ t.vault_tls_key_file }}"
+  {% endif -%}
+  {%- endif -%}
 
 }
 {% endfor %}
@@ -44,7 +47,9 @@ listener "tcp" {
 
 # Enterprise license_path
 # This will be required for enterprise as of v1.8
-#license_path = "/etc/vault.d/vault.hclic"
+{% if vault_license_file is not none %}
+license_path = "{{ vault_license_path }}"
+{% endif %}
 
 # Example AWS KMS auto unseal
 #seal "awskms" {

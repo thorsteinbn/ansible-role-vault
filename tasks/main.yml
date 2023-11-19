@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-role-vault
 - name: Install system requirements
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name: '{{ vault_required_system_packages }}'
 
 - name: Add Hashicorp repository
@@ -14,19 +14,19 @@
     gpgkey: https://rpm.releases.hashicorp.com/gpg
 
 - name: Install vault
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name: '{{ vault_package }}'
+    update_cache: true
 
 - name: Insert vault license file
   ansible.builtin.copy:
-    src: '{{ vault_license_file_source }}'
-    dest: '{{ vault_enterprise_license_location }}'
+    src: '{{ vault_license_file }}'
+    dest: '{{ vault_license_path }}'
     owner: '{{ vault_user }}'
     group: '{{ vault_group }}'
     mode: '0640'
   when:
-    - vault_license_file_source | d(False)
-    - vault_enterprise_license_location | d(False)
+    - vault_license_file | d(False)
 
 - name: Insert vault config template
   ansible.builtin.template:
